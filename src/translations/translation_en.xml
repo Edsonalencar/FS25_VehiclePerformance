@@ -2,5 +2,17 @@
 <l10N>
     <texts>
         <text name="vp_mod_title" text="Vehicle Performance"/>
+        <text name="vp_row_drivetrain" text="Drive %s · %d driven axle(s)"/>
+        <text name="vp_drivetrain_unknown" text="Drive: unknown"/>
+        <text name="vp_row_power_calc" text="Calc. peak: %s hp / %s kW · %s N·m (+%s%%)"/>
+        <text name="vp_row_power_calc_noreserve" text="Calc. peak: %s hp / %s kW · %s N·m"/>
+        <text name="vp_row_power_weight" text="%s kg/hp"/>
+        <text name="vp_row_traction" text="Traction force ~%s kN (%s)"/>
+        <text name="vp_limit_adhesion" text="grip"/>
+        <text name="vp_limit_motor" text="engine"/>
+        <text name="vp_limit_partial" text="partial data"/>
+        <text name="vp_row_load" text="Under load (%s%% of weight) ~%s %s"/>
+        <text name="vp_row_load_insufficient" text="Under load: insufficient traction"/>
+        <text name="vp_row_pulling_index" text="Pulling index %s (heuristic)"/>
     </texts>
 </l10N>
