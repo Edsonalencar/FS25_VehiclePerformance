@@ -1,0 +1,4 @@
+/dist/
+/.lua/
+*.zip
+__pycache__/

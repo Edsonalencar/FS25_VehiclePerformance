@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<modDesc descVersion="111">
+    <author>FS25 Mods Editor</author>
+    <version>1.0.0.0</version>
+    <title>
+        <en>Vehicle Performance</en>
+        <br>Desempenho de Veículos</br>
+    </title>
+    <description>
+        <en><![CDATA[Adds performance data to the shop configuration screen: drivetrain, calculated peak power and torque, power-to-weight, estimated traction force and speed under load. Reads the game's own vehicle data; changes nothing.]]></en>
+        <br><![CDATA[Adiciona dados de desempenho à tela de configuração da loja: tração, potência e torque de pico calculados, relação peso/potência, força de tração estimada e velocidade sob carga. Lê os dados do próprio jogo; não altera nada.]]></br>
+    </description>
+    <iconFilename>icon_VehiclePerformance.dds</iconFilename>
+    <multiplayer supported="true"/>
+    <l10n filenamePrefix="translations/translation"/>
+    <extraSourceFiles>
+        <sourceFile filename="main.lua"/>
+    </extraSourceFiles>
+</modDesc>
