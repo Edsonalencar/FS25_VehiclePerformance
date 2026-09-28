@@ -45,6 +45,34 @@ make golden       # tests/golden (regressão contra dumps reais do jogo)
 - `vpSet <showIndex|logLevel|pullingRef> <valor>` — grava em
   `modSettings/FS25_VehiclePerformance/settings.xml`.
 
+## API pública
+
+O mod expõe uma API estável e somente leitura para outros mods, instalada
+por `src/app/PublicApi.lua` (`VehiclePerformance.api`) e também publicada
+como o global `g_vehiclePerformanceApi`, no mesmo padrão de outros mods FS25
+que expõem API própria:
+
+```lua
+-- de dentro de outro mod:
+local perf = g_vehiclePerformanceApi.getPerformance(vehicle)     -- PerformanceData ou nil
+local drivetrain = g_vehiclePerformanceApi.getMetric(vehicle, "drivetrain") -- Value da métrica, ou nil
+local config = g_vehiclePerformanceApi.getCurrentConfiguration(vehicle)     -- cópia; mutar não afeta o veículo
+```
+
+- `getPerformance(vehicle)` nunca lança erro: devolve `nil` se `vehicle` for
+  `nil`, se não houver `storeItem` correspondente, ou se qualquer etapa da
+  leitura/análise falhar.
+- `getMetric(vehicle, metricId)` devolve o `Value` de uma métrica específica
+  (ver `docs/FORMULAS.md` para os ids F1-F12), ou `nil`.
+- `getCurrentConfiguration(vehicle)` devolve sempre uma **cópia rasa** de
+  `vehicle.configurations` — alterar o resultado nunca afeta o veículo. Os
+  diferenciais (e, por consequência, a métrica `drivetrain`) só existem com
+  dados de servidor; num cliente MP puro, fora da loja, essa métrica pode
+  sair `"unknown"`.
+
+Detalhes de cada métrica, unidades e regras de "desconhecido" estão em
+`docs/FORMULAS.md`.
+
 ## Licença
 
 Código sob MIT (`LICENSE`). Ícone e arte com todos os direitos reservados
