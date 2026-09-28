@@ -4,9 +4,7 @@ local NS = VehiclePerformance
 local GameBootstrap = {}
 
 -- Adapter fino da porta ConsoleRegistrar (app/Console.lua, Fase 3): traduz
--- add/remove para addConsoleCommand/removeConsoleCommand. Ainda não é usado
--- nesta fase (entra em uso na Fase 3, junto com app/Console.lua).
--- luacheck: ignore 241
+-- add/remove para addConsoleCommand/removeConsoleCommand.
 local ConsoleRegistrar = {}
 ConsoleRegistrar.__index = ConsoleRegistrar
 
@@ -40,7 +38,52 @@ function listener:loadMap() -- luacheck: ignore 212/self
         end
         NS.app.settings:loadSettings()
         NS.app.logger:setLevel(NS.app.settings:get("debug#logLevel"))
-        -- Fase 4: shopConfigAdapter:install(); Fase 3/5: Console.install(...)
+
+        NS.adapters.reader = NS.adapters.RuntimeVehicleReader
+        NS.app.aviStatus = NS.adapters.AdditionalVehicleInfoAdapter.detect(NS.app.logger)
+        NS.app.performanceService = NS.app.PerformanceService.new({
+            analyze = NS.core.VehicleAnalyzer.analyze,
+            settings = NS.app.settings,
+            logger = NS.app.logger,
+        })
+
+        NS.app.consoleRegistrar = NS.app.consoleRegistrar or ConsoleRegistrar.new()
+        NS.app.Console.install(NS.app.consoleRegistrar, {
+            hookStatus = NS.adapters.HookRegistry.status,
+            previewSource = NS.adapters.PreviewSource,
+            reader = NS.adapters.RuntimeVehicleReader,
+            writer = NS.adapters.SnapshotXmlWriter,
+            analyze = NS.core.VehicleAnalyzer.analyze,
+            service = NS.app.performanceService,
+            aviStatus = NS.app.aviStatus,
+            settings = NS.app.settings,
+            logger = NS.app.logger,
+        })
+
+        NS.adapters.shopConfigAdapter = NS.adapters.ShopConfigAdapter.new({
+            reader = NS.adapters.RuntimeVehicleReader,
+            service = NS.app.performanceService,
+            formatter = NS.app.RowFormatter,
+            text = NS.adapters.GameText,
+            settings = NS.app.settings,
+            logger = NS.app.logger,
+            state = NS.app.state,
+        })
+        if not NS.adapters.shopConfigAdapter:install() then
+            NS.app.logger:warning("bootstrap", "ShopConfigScreen.registerCustomSpecValues indisponível; UI desativada")
+        end
+
+        NS.app.PublicApi.install(NS, {
+            reader = NS.adapters.RuntimeVehicleReader,
+            service = NS.app.performanceService,
+            storeItemOf = NS.adapters.PreviewSource.storeItemOf,
+            logger = NS.app.logger,
+        })
+        -- Outros mods rodam em env próprio: o global compartilhado vai no env raiz.
+        if type(getfenv) == "function" then
+            getfenv(0).g_vehiclePerformanceApi = NS.api
+        end
+
         NS.app.state:set("ready")
         NS.app.logger:info("bootstrap", "v%s carregado", NS.VERSION)
     end)
@@ -49,6 +92,13 @@ end
 function listener:deleteMap() -- luacheck: ignore 212/self
     NS.app.SafeCall.run("bootstrap:deleteMap", function()
         NS.adapters.HookRegistry.uninstall()
+        NS.app.Console.uninstall()
+        if NS.app.performanceService then
+            NS.app.performanceService:clear()
+        end
+        if type(getfenv) == "function" then
+            getfenv(0).g_vehiclePerformanceApi = nil
+        end
         NS.app.state:set("unloaded")
     end)
 end

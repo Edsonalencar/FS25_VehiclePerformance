@@ -31,4 +31,15 @@ function PreviewSource.list()
     return out
 end
 
+--- storeItem de um veículo qualquer (usado pela API pública). nil se não achar.
+function PreviewSource.storeItemOf(vehicle)
+    if type(vehicle) ~= "table" or type(vehicle.configFileName) ~= "string" then
+        return nil
+    end
+    if type(g_storeManager) ~= "table" or type(g_storeManager.getItemByXMLFilename) ~= "function" then
+        return nil
+    end
+    return g_storeManager:getItemByXMLFilename(vehicle.configFileName)
+end
+
 NS.adapters.PreviewSource = PreviewSource

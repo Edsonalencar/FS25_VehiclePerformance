@@ -4,7 +4,7 @@ author: claude
 source_prd: specs/research/2026-09-27-fs25-vehicle-performance.md
 git_commit: n/a (git init na Fase 1)
 branch: n/a
-status: draft
+status: implemented (verificação em jogo pendente)
 tags: [spec, fs25, shop, ShopConfigScreen, Motorized, VehicleMotor, Wheels, differentials, metrics]
 ---
 
@@ -305,10 +305,10 @@ end
 ### Success Criteria
 
 #### Automated Verification
-- [ ] `make setup` instala `.lua/` com busted e luacheck.
-- [ ] `make fmt-check lint deps`: sem erros.
-- [ ] `make unit`: `bootstrap_spec` passa.
-- [ ] `make verify`: modDesc, manifest e l10n válidos, e o ZIP reaberto tem hashes idênticos.
+- [x] `make setup` instala `.lua/` com busted e luacheck. (adaptado: toolchain reaproveitada de `SmartShopSearch/.lua`, mesma versão Lua 5.1/busted/luacheck, em vez de rebaixar hererocks sem rede neste ambiente)
+- [x] `make fmt-check lint deps`: sem erros.
+- [x] `make unit`: `bootstrap_spec` passa.
+- [x] `make verify`: modDesc, manifest e l10n válidos, e o ZIP reaberto tem hashes idênticos.
 
 #### Manual Verification
 - [ ] Com o mod ativo num savegame, o `log.txt` mostra `[VehiclePerformance] info: v1.0.0 carregado` e nenhum erro Lua ou XML.
@@ -513,9 +513,9 @@ A ordem de `STEPS` é fixa. Cada passo lê só métricas de passos anteriores.
 ### Success Criteria
 
 #### Automated Verification
-- [ ] `make deps`: `core/` limpo (sem `g_`, `Utils.`, `XMLFile`, `print`, `io`, `os`).
-- [ ] `make unit`: todos os specs passam, incluindo `analyzer_spec` com 7 fixtures e 4 degenerados.
-- [ ] `make lint fmt-check verify`: passam.
+- [x] `make deps`: `core/` limpo (sem `g_`, `Utils.`, `XMLFile`, `print`, `io`, `os`).
+- [x] `make unit`: todos os specs passam, incluindo `analyzer_spec` com 7 fixtures e 4 degenerados.
+- [x] `make lint fmt-check verify`: passam.
 
 #### Manual Verification
 - [ ] Revisar `expected.lua` contra a tabela §Fórmulas. Nenhum número deve ter sido alterado para "fazer o teste passar".
@@ -689,8 +689,8 @@ return {
 ### Success Criteria
 
 #### Automated Verification
-- [ ] `make unit golden`: `golden_spec` passa com os 11 dumps.
-- [ ] `make deps lint fmt-check verify`: passam (`app/Console.lua` não usa `g_`).
+- [ ] `make unit golden`: `golden_spec` passa com os 11 dumps. — **BLOQUEADO (ambiente sem FS25)**: infraestrutura pronta; `golden_spec` fica `pending` até os dumps serem coletados em jogo com `vpDump`.
+- [x] `make deps lint fmt-check verify`: passam (`app/Console.lua` não usa `g_`).
 
 #### Manual Verification
 - [ ] `vpDump` grava um arquivo por preview e o caminho aparece no console.
@@ -834,8 +834,8 @@ Em `deleteMap`, chamar `NS.app.performanceService:clear()`. O `Console` passa a 
 ### Success Criteria
 
 #### Automated Verification
-- [ ] `make unit golden`: passam.
-- [ ] `make deps lint fmt-check verify`: passam, incluindo as chaves `vp_` presentes em `translation_en.xml`.
+- [x] `make unit golden`: passam (golden `pending`, ver Fase 3).
+- [x] `make deps lint fmt-check verify`: passam, incluindo as chaves `vp_` presentes em `translation_en.xml`.
 
 #### Manual Verification
 - [ ] Na tela de configuração do Ford 8030 aparecem as 5 linhas (sem índice), coerentes com `vpAnalyze`.
@@ -955,8 +955,8 @@ No `deleteMap`, zerar `g_vehiclePerformanceApi`. O `Console` recebe `aviStatus` 
 ### Success Criteria
 
 #### Automated Verification
-- [ ] `make ci`: fmt-check, lint, deps, unit, golden e verify passam.
-- [ ] `make build`: gera `dist/FS25_VehiclePerformance-1.0.0.zip` e `SHA256SUMS`.
+- [x] `make ci`: fmt-check, lint, deps, unit, golden e verify passam (99 unit; golden `pending` sem dumps reais).
+- [x] `make build`: gera `dist/FS25_VehiclePerformance-1.0.0.zip` e `SHA256SUMS`.
 
 #### Manual Verification
 - [ ] Sem o AVI: `vpStatus` mostra `avi=ausente` e a loja fica igual à da Fase 4.

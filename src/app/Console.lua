@@ -35,7 +35,22 @@ local function vpStatus(deps)
                 string.format("hook %s: %s (falhas=%d)", h.id, h.active and "ativo" or "inativo", h.failures or 0)
         end
     end
-    -- Fase 4/5: cache e status do Additional Vehicle Info entram aqui.
+    if deps.service and type(deps.service.cache) == "table" then
+        local n = 0
+        for _ in pairs(deps.service.cache) do
+            n = n + 1
+        end
+        lines[#lines + 1] = string.format("cache: %d entradas, %d hits", n, deps.service.hits or 0)
+    end
+    local avi = deps.aviStatus
+    if type(avi) == "table" then
+        lines[#lines + 1] = string.format(
+            "avi=%s (v%s, %s)",
+            avi.present and "present" or "ausente",
+            tostring(avi.version),
+            tostring(avi.integration)
+        )
+    end
 
     local msg = table.concat(lines, "\n")
     if deps.logger then
@@ -144,6 +159,9 @@ local function vpSet(deps, name, raw)
         return "vpSet: settings indisponível"
     end
     deps.settings:set(key, value)
+    if deps.service and type(deps.service.clear) == "function" then
+        deps.service:clear() -- métricas dependem das settings: invalida o cache
+    end
     if name == "logLevel" and deps.logger and type(deps.logger.setLevel) == "function" then
         deps.logger:setLevel(value)
     end

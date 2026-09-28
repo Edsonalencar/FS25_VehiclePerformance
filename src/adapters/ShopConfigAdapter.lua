@@ -37,6 +37,9 @@ function ShopConfigAdapter:onCustomSpecValues(screen, values, vehicle)
     if not self.settings:get("ui#enabled") or type(values) ~= "table" then
         return
     end
+    if self.settings:get("debug#enabled") and self.settings:get("debug#simulateFailure") == "hook" then
+        error("falha simulada (debug#simulateFailure=hook)")
+    end
     if vehicle == nil or vehicle.spec_motorized == nil then
         return -- não motorizado (ex.: reboque): nada a fazer
     end
@@ -46,7 +49,11 @@ function ShopConfigAdapter:onCustomSpecValues(screen, values, vehicle)
     end
     local snapshot = self.reader.read(vehicle, storeItem, self.logger)
     local data = self.service:get(snapshot)
-    local rows = self.formatter.rows(data, self.text, { showPullingIndex = self.settings:get("ui#showPullingIndex") })
+    local rows = self.formatter.rows(data, self.text, {
+        showPullingIndex = self.settings:get("ui#showPullingIndex"),
+        loadRefWeightFraction = self.settings:get("metrics#loadRefWeightFraction"),
+        logger = self.logger,
+    })
     for _, row in ipairs(rows) do
         local profile = ShopConfigScreen.GUI_PROFILE and ShopConfigScreen.GUI_PROFILE[row.profile]
         if profile then

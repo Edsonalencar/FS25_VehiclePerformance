@@ -122,8 +122,14 @@ function RowFormatter.rows(data, text, opts)
     -- insufficient).
     local loadSpeed = data:get("loadSpeedKmh")
     if loadSpeed ~= nil and loadSpeed.status == "ok" then
-        local fraction = data:get("loadRefWeightFraction")
-        local fractionPct = isOk(fraction) and (fraction.value * 100) or 0
+        -- A fração de referência é uma setting (metrics#loadRefWeightFraction),
+        -- não uma métrica do core: chega por opts.
+        local fraction = opts.loadRefWeightFraction
+        if type(fraction) ~= "number" then
+            local metric = data:get("loadRefWeightFraction")
+            fraction = isOk(metric) and metric.value or 0.5
+        end
+        local fractionPct = fraction * 100
         local speedValue, speedUnit = text.speed(loadSpeed.value)
         local line =
             safeFormat(text, logger, "vp_row_load", text.number(fractionPct, 0), text.number(speedValue, 0), speedUnit)
