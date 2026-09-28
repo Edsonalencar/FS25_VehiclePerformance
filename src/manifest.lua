@@ -2,8 +2,13 @@
 VehiclePerformance.manifest = {
     "app/SafeCall.lua",
     "app/StateMachine.lua",
+    "app/ConfigurationResolver.lua",
+    "app/Console.lua",
     "adapters/GameLogger.lua",
     "adapters/HookRegistry.lua",
     "adapters/SettingsStore.lua",
+    "adapters/RuntimeVehicleReader.lua",
+    "adapters/SnapshotXmlWriter.lua",
+    "adapters/PreviewSource.lua",
     "adapters/GameBootstrap.lua",
 }
