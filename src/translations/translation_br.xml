@@ -2,5 +2,17 @@
 <l10N>
     <texts>
         <text name="vp_mod_title" text="Desempenho de Veículos"/>
+        <text name="vp_row_drivetrain" text="Tração %s · %d eixo(s) motriz(es)"/>
+        <text name="vp_drivetrain_unknown" text="Tração: desconhecida"/>
+        <text name="vp_row_power_calc" text="Pico calc.: %s cv / %s kW · %s N·m (+%s%%)"/>
+        <text name="vp_row_power_calc_noreserve" text="Pico calc.: %s cv / %s kW · %s N·m"/>
+        <text name="vp_row_power_weight" text="%s kg/cv"/>
+        <text name="vp_row_traction" text="Força de tração ~%s kN (%s)"/>
+        <text name="vp_limit_adhesion" text="aderência"/>
+        <text name="vp_limit_motor" text="motor"/>
+        <text name="vp_limit_partial" text="dados parciais"/>
+        <text name="vp_row_load" text="Sob carga (%s%% do peso) ~%s %s"/>
+        <text name="vp_row_load_insufficient" text="Sob carga: tração insuficiente"/>
+        <text name="vp_row_pulling_index" text="Índice de puxada %s (heurístico)"/>
     </texts>
 </l10N>
